@@ -21,3 +21,9 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+
+spark-2.4.1-bin-hadoop2.7/
+hadoop-conf/
+
+.idea/workspace.xml
+.idea/tasks.xml
