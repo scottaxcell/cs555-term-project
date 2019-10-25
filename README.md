@@ -1,6 +1,7 @@
 # Producing the Greatest Movie
 
 CS 555 Term Project
+
 Authors: Scott Axcell, Brandon Glidemaster, Daniel Kielman
 
 ## Build and Run
