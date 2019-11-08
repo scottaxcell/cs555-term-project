@@ -1,12 +1,15 @@
 package cs555.project;
 
 public class MoviesMetadataHelper {
+    public static final int BUDGET_INDEX = 5;
     public static final int ID_INDEX = 5;
     public static final int ORIGINAL_TITLE_INDEX = 8;
     public static final int OVERVIEW_INDEX = 9;
     public static final int REVENUE_INDEX = 15;
-
+    public static final int VOTE_AVERAGE_INDEX = 22;
     public static final int NUM_FIELDS = 24;
+
+    private static final float VOTE_AVERAGE_SUCCESS_BASELINE = 5.0f;
 
     public static boolean isRowValid(String[] split) {
         if (split.length != NUM_FIELDS)
@@ -14,5 +17,26 @@ public class MoviesMetadataHelper {
         if (split[0].equalsIgnoreCase("adult")) // header
             return false;
         return true;
+    }
+
+    public static Integer parseBudget(String[] split) {
+        String budgetStr = split[BUDGET_INDEX];
+        try {
+            return Integer.parseInt(budgetStr);
+        }
+        catch (NumberFormatException ignored) {
+        }
+        return null;
+    }
+
+    public static boolean isMovieSuccessfulByVoteAverage(String[] split) {
+        String voteAverageStr = split[VOTE_AVERAGE_INDEX];
+        try {
+            float voteAverage = Float.parseFloat(voteAverageStr);
+            return voteAverage > VOTE_AVERAGE_SUCCESS_BASELINE;
+        }
+        catch (NumberFormatException ignored) {
+        }
+        return false;
     }
 }
