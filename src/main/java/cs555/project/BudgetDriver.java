@@ -6,9 +6,10 @@ import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class BudgetDriver {
+public class BudgetDriver implements Serializable {
     public static void main(String[] args) {
         new BudgetDriver().run();
     }
@@ -24,12 +25,16 @@ public class BudgetDriver {
         JavaRDD<String> textFile = sc.textFile("/s/chopin/a/grad/sgaxcell/cs555-term-project/data/movies_metadata.csv");
 
         // find unique budgets; budget is considered valid if it is greater than 0
-        textFile.map(Utils::splitCommaDelimitedString)
+        List<Integer> successfulBudgets = textFile.map(Utils::splitCommaDelimitedString)
             .filter(split -> MoviesMetadataHelper.isRowValid(split) &&
-                                 MoviesMetadataHelper.isMovieSuccessfulByVoteAverage(split))
+                MoviesMetadataHelper.isMovieSuccessfulByVoteAverage(split))
             .map(MoviesMetadataHelper::parseBudget)
             .filter(budget -> Objects.nonNull(budget) && budget > 0)
-            .foreach(budget -> {
+            .collect();
+
+
+        successfulBudgets.stream()
+            .forEach(budget -> {
                 TotalAndCount tac = budgetToCount.computeIfAbsent(budget, k -> new TotalAndCount());
                 tac.count++;
                 tac.total += budget;
@@ -48,17 +53,25 @@ public class BudgetDriver {
     private void writeStatisticsToFile(JavaSparkContext sc) {
         List<String> writeMe = new ArrayList<>();
         writeMe.add("Budget 0.95 Confidence Interval Successful Movie");
-        writeMe.add("================================================");
-        writeMe.add("Budgets outside of the confidence interval are abonormal");
-        writeMe.add("--------------------------------------------------------");
-        writeMe.add("Budget,Count,Average,Standard Deviation,Confidence Interval");
+        writeMe.add("================================================\n");
+        writeMe.add("Budget averages outside of the confidence interval are abnormal");
+        writeMe.add("---------------------------------------------------------------");
 
-        // todo(sga) -- write out pretty and csv flavors
         budgetToStats.entrySet().stream()
+            .sorted(Map.Entry.comparingByKey(Comparator.reverseOrder()))
             .forEach(e -> {
                 BudgetStats stats = e.getValue();
-                writeMe.add(e.getKey() + "," + stats.count + "," + stats.average + "," + "," + stats.standardDeviation + "," + stats.confidenceInterval);
+                writeMe.add(String.format("%d Occurrences %d, Average %.2f ± %.2f, .95 Confidence Interval %.2f ± %.2f", e.getKey(), stats.count, stats.average, stats.standardDeviation, stats.average, stats.confidenceInterval));
             });
+
+        writeMe.add("\nBudget,Count,Average,Standard Deviation,Confidence Interval");
+        budgetToStats.entrySet().stream()
+            .sorted(Map.Entry.comparingByKey(Comparator.reverseOrder()))
+            .forEach(e -> {
+                BudgetStats stats = e.getValue();
+                writeMe.add(String.format("%d,%d,%.2f,%.2f,%.2f", e.getKey(), stats.count, stats.average, stats.standardDeviation, stats.confidenceInterval));
+            });
+
         sc.parallelize(writeMe, 1).saveAsTextFile("BudgetAnalysis");
     }
 
