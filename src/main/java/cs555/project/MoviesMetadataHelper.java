@@ -1,7 +1,7 @@
 package cs555.project;
 
 public class MoviesMetadataHelper {
-    public static final int BUDGET_INDEX = 5;
+    public static final int BUDGET_INDEX = 2;
     public static final int ID_INDEX = 5;
     public static final int ORIGINAL_TITLE_INDEX = 8;
     public static final int OVERVIEW_INDEX = 9;
