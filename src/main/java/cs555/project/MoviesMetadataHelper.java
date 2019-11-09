@@ -9,7 +9,7 @@ public class MoviesMetadataHelper {
     public static final int VOTE_AVERAGE_INDEX = 22;
     public static final int NUM_FIELDS = 24;
 
-    private static final float VOTE_AVERAGE_SUCCESS_BASELINE = 5.0f;
+    public static final float VOTE_AVERAGE_SUCCESS_BASELINE = 7.0f;
 
     public static boolean isRowValid(String[] split) {
         if (split.length != NUM_FIELDS)

@@ -24,14 +24,12 @@ public class BudgetDriver implements Serializable {
 
         JavaRDD<String> textFile = sc.textFile("/s/chopin/a/grad/sgaxcell/cs555-term-project/data/movies_metadata.csv");
 
-        // find unique budgets; budget is considered valid if it is greater than 0
         List<Integer> successfulBudgets = textFile.map(Utils::splitCommaDelimitedString)
             .filter(split -> MoviesMetadataHelper.isRowValid(split) &&
                 MoviesMetadataHelper.isMovieSuccessfulByVoteAverage(split))
             .map(MoviesMetadataHelper::parseBudget)
             .filter(budget -> Objects.nonNull(budget) && budget > 0)
             .collect();
-
 
         successfulBudgets.stream()
             .forEach(budget -> {
