@@ -1,0 +1,28 @@
+Movie Budget Analysis
+=====================
+
+Z values > confidence score of 1.96 are statistically significant
+-----------------------------------------------------------------
+
+50000000: BudgetStats{numMovies=124, numSuccessful=10, confidenceInterval=-0.09, z=-16.38}
+35000000: BudgetStats{numMovies=141, numSuccessful=13, confidenceInterval=-0.08, z=-14.34}
+10000000: BudgetStats{numMovies=259, numSuccessful=26, confidenceInterval=-0.07, z=-13.05}
+20000000: BudgetStats{numMovies=243, numSuccessful=25, confidenceInterval=-0.07, z=-12.57}
+5000000: BudgetStats{numMovies=286, numSuccessful=31, confidenceInterval=-0.07, z=-11.63}
+60000000: BudgetStats{numMovies=110, numSuccessful=13, confidenceInterval=-0.05, z=-9.64}
+8000000: BudgetStats{numMovies=155, numSuccessful=19, confidenceInterval=-0.05, z=-8.90}
+500000: BudgetStats{numMovies=142, numSuccessful=18, confidenceInterval=-0.05, z=-8.14}
+25000000: BudgetStats{numMovies=206, numSuccessful=28, confidenceInterval=-0.04, z=-6.54}
+1000000: BudgetStats{numMovies=197, numSuccessful=27, confidenceInterval=-0.04, z=-6.33}
+40000000: BudgetStats{numMovies=167, numSuccessful=23, confidenceInterval=-0.04, z=-6.19}
+12000000: BudgetStats{numMovies=172, numSuccessful=27, confidenceInterval=-0.02, z=-2.73}
+18000000: BudgetStats{numMovies=105, numSuccessful=17, confidenceInterval=-0.01, z=-1.83}
+30000000: BudgetStats{numMovies=190, numSuccessful=31, confidenceInterval=-0.01, z=-1.62}
+3000000: BudgetStats{numMovies=223, numSuccessful=37, confidenceInterval=-0.01, z=-1.12}
+3500000: BudgetStats{numMovies=102, numSuccessful=17, confidenceInterval=-0.01, z=-0.98}
+2000000: BudgetStats{numMovies=242, numSuccessful=43, confidenceInterval=0.01, z=1.01}
+6000000: BudgetStats{numMovies=173, numSuccessful=31, confidenceInterval=0.01, z=1.27}
+1500000: BudgetStats{numMovies=120, numSuccessful=22, confidenceInterval=0.01, z=2.01}
+7000000: BudgetStats{numMovies=136, numSuccessful=25, confidenceInterval=0.01, z=2.10}
+15000000: BudgetStats{numMovies=226, numSuccessful=44, confidenceInterval=0.02, z=4.09}
+4000000: BudgetStats{numMovies=181, numSuccessful=41, confidenceInterval=0.06, z=9.80}
