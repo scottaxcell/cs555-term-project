@@ -22,7 +22,8 @@ public class MoviesMetadataHelper {
     public static Integer parseBudget(String[] split) {
         String budgetStr = split[BUDGET_INDEX];
         try {
-            return Integer.parseInt(budgetStr);
+            int budget = Integer.parseInt(budgetStr);
+            return budget > 0 ? budget : null;
         }
         catch (NumberFormatException ignored) {
         }
