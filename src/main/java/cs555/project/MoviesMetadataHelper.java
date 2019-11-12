@@ -37,6 +37,17 @@ public class MoviesMetadataHelper {
         return Utils.isStringValid(overview) ? overview : null;
     }
 
+    public static Integer parseId(String[] split) {
+        String idStr = split[ID_INDEX];
+        try {
+            int id = Integer.parseInt(idStr);
+            return id > 0 ? id : null;
+        }
+        catch (NumberFormatException ignored) {
+        }
+        return null;
+    }
+
     public static boolean isMovieSuccessfulByVoteAverage(String[] split) {
         String voteAverageStr = split[VOTE_AVERAGE_INDEX];
         try {
