@@ -1,5 +1,7 @@
 package cs555.project;
 
+import cs555.project.utils.Utils;
+
 public class MoviesMetadataHelper {
     public static final int BUDGET_INDEX = 2;
     public static final int ID_INDEX = 5;
@@ -28,6 +30,11 @@ public class MoviesMetadataHelper {
         catch (NumberFormatException ignored) {
         }
         return null;
+    }
+
+    public static String parseOverview(String[] split) {
+        String overview = split[OVERVIEW_INDEX];
+        return Utils.isStringValid(overview) ? overview : null;
     }
 
     public static boolean isMovieSuccessfulByVoteAverage(String[] split) {

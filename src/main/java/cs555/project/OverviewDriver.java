@@ -11,49 +11,52 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class BudgetDriver extends Driver {
+public class OverviewDriver extends Driver {
     public static void main(String[] args) {
-        new BudgetDriver().run();
+        new OverviewDriver().run();
     }
 
-    private final Map<Integer, Stats> budgetToStats = new HashMap<>();
+    private final Map<String, Stats> wordToStats = new HashMap<>();
 
-    private static class BudgetMetadata implements Serializable {
-        final int budget;
+    private static class OverviewMetadata implements Serializable {
+        final String overview;
         final boolean successful;
 
-        BudgetMetadata(int budget, boolean successful) {
-            this.budget = budget;
+        public OverviewMetadata(String overview, boolean successful) {
+            this.overview = overview;
             this.successful = successful;
         }
     }
 
     private void run() {
-//        SparkConf conf = new SparkConf().setAppName("Budget Analysis");
-        SparkConf conf = new SparkConf().setMaster("local").setAppName("Budget Analysis");
+//        SparkConf conf = new SparkConf().setAppName("Overview Analysis");
+        SparkConf conf = new SparkConf().setMaster("local").setAppName("Overview Analysis");
 
         JavaSparkContext sc = new JavaSparkContext(conf);
 
 //        JavaRDD<String> textFile = sc.textFile(TBD/data/movies_metadata.csv);
         JavaRDD<String> textFile = sc.textFile("/s/chopin/a/grad/sgaxcell/cs555-term-project/data/movies_metadata.csv");
 
-        List<BudgetMetadata> allMoviesWithABudget = textFile.map(Utils::splitCommaDelimitedString)
+        List<OverviewMetadata> allMoviesWithAnOverview = textFile.map(Utils::splitCommaDelimitedString)
             .filter(split -> MoviesMetadataHelper.isRowValid(split) &&
-                MoviesMetadataHelper.parseBudget(split) != null)
-            .map(split -> new BudgetMetadata(MoviesMetadataHelper.parseBudget(split), MoviesMetadataHelper.isMovieSuccessfulByVoteAverage(split)))
+                MoviesMetadataHelper.parseOverview(split) != null)
+            .map(split -> new OverviewMetadata(MoviesMetadataHelper.parseOverview(split), MoviesMetadataHelper.isMovieSuccessfulByVoteAverage(split)))
             .collect();
 
-        allMoviesWithABudget.stream()
-            .forEach(budgetMetadata -> {
-                Stats stats = budgetToStats.computeIfAbsent(budgetMetadata.budget, k -> new Stats());
-                if (budgetMetadata.successful)
-                    stats.numSuccessful++;
-                stats.numMovies++;
+        allMoviesWithAnOverview.stream()
+            .forEach(overviewMetadata -> {
+                String[] words = overviewMetadata.overview.split(" ");
+                for (String word : words) {
+                    Stats stats = wordToStats.computeIfAbsent(word, k -> new Stats());
+                    if (overviewMetadata.successful)
+                        stats.numSuccessful++;
+                    stats.numMovies++;
+                }
             });
 
-        calculatePopulationMeanAndStdDev(allMoviesWithABudget);
+        calculatePopulationMeanAndStdDev(allMoviesWithAnOverview);
 
-        budgetToStats.entrySet().stream()
+        wordToStats.entrySet().stream()
             .filter(entry -> entry.getValue().numMovies > 100)
             .forEach(entry -> {
                 Stats otherStats = buildOtherStats(entry.getKey());
@@ -69,9 +72,9 @@ public class BudgetDriver extends Driver {
         writeStatisticsToFile(sc);
     }
 
-    private Stats buildOtherStats(Integer key) {
+    private Stats buildOtherStats(String key) {
         Stats stats = new Stats();
-        budgetToStats.entrySet().stream()
+        wordToStats.entrySet().stream()
             .filter(entry -> !entry.getKey().equals(key))
             .forEach(entry -> {
                 stats.numMovies += entry.getValue().numMovies;
@@ -82,31 +85,31 @@ public class BudgetDriver extends Driver {
 
     private void writeStatisticsToFile(JavaSparkContext sc) {
         List<String> writeMe = new ArrayList<>();
-        writeMe.add("Movie Budget Analysis");
-        writeMe.add("=====================\n");
+        writeMe.add("Movie Overview Analysis");
+        writeMe.add("=======================\n");
         writeMe.add("Z values > confidence score of 1.96 are statistically significant");
         writeMe.add("-----------------------------------------------------------------\n");
 
-        budgetToStats.entrySet().stream()
+        wordToStats.entrySet().stream()
             .filter(entry -> entry.getValue().numMovies > 100)
             .sorted((e1, e2) -> e1.getValue().compareTo(e2.getValue()))
             .forEach(e -> {
                 Stats stats = e.getValue();
-                writeMe.add(String.format("%d: %s", e.getKey(), stats));
+                writeMe.add(String.format("%s: %s", e.getKey(), stats));
             });
 
-        sc.parallelize(writeMe, 1).saveAsTextFile("BudgetAnalysis");
+        sc.parallelize(writeMe, 1).saveAsTextFile("OverviewAnalysis");
     }
 
     /**
      * Estimate population mean using sample size
      *
-     * @param budgetMetadatas
+     * @param overviewMetadatas
      */
-    private void calculatePopulationMeanAndStdDev(List<BudgetMetadata> budgetMetadatas) {
-        budgetMetadatas.stream()
-            .forEach(budgetMetadata -> {
-                if (budgetMetadata.successful)
+    private void calculatePopulationMeanAndStdDev(List<OverviewMetadata> overviewMetadatas) {
+        overviewMetadatas.stream()
+            .forEach(overviewMetadata -> {
+                if (overviewMetadata.successful)
                     numSuccessful++;
                 numMovies++;
             });
