@@ -1,70 +1,40 @@
 package cs555.project;
 
-import cs555.project.utils.TotalAndCount;
 import cs555.project.utils.Utils;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-public class BudgetDriver implements Serializable {
+public class BudgetDriver extends Driver {
     public static void main(String[] args) {
         new BudgetDriver().run();
     }
 
-    // confidence interval for p1 - p2, where px = # success / # movies
-    // std dev. = sqrt(2p (1 - p) / n1 + n2), where p = (s1 + s2 / n1 + n2)
-    // z = (conf. int. - 0) / std. dev.
-    // if z > Zc then budget is more likely to produce a successful movie, if s1 > s2 that is
-
-    private final Map<Integer, BudgetStats> budgetToStats = new HashMap<>();
-    private int totalNumSuccessfulMovies;
-    private int totalNumMovies;
-    private float populationMean;
-    private float stdDev;
-
-    private static class BudgetStats implements Comparable {
-        int numMovies;
-        int numSuccessful;
-        float confidenceInterval;
-        float z;
-
-        float getSuccessProportion() {
-            return numSuccessful / (float) numMovies;
-        }
-
-        @Override
-        public String toString() {
-            return "BudgetStats{" +
-                "numMovies=" + numMovies +
-                ", numSuccessful=" + numSuccessful +
-                ", confidenceInterval=" + String.format("%.2f", confidenceInterval) +
-                ", z=" + String.format("%.2f", z) +
-                '}';
-        }
-
-        @Override
-        public int compareTo(Object o) {
-            return Float.compare(z, ((BudgetStats) o).z);
-        }
-    }
+    private final Map<Integer, Stats> budgetToStats = new HashMap<>();
 
     private static class BudgetMetadata implements Serializable {
         final int budget;
         final boolean successful;
 
-        public BudgetMetadata(int budget, boolean successful) {
+        BudgetMetadata(int budget, boolean successful) {
             this.budget = budget;
             this.successful = successful;
         }
     }
 
     private void run() {
+//        SparkConf conf = new SparkConf().setAppName("Budget Analysis");
         SparkConf conf = new SparkConf().setMaster("local").setAppName("Budget Analysis");
+
         JavaSparkContext sc = new JavaSparkContext(conf);
 
+//        JavaRDD<String> textFile = sc.textFile(TBD/data/movies_metadata.csv);
         JavaRDD<String> textFile = sc.textFile("/s/chopin/a/grad/sgaxcell/cs555-term-project/data/movies_metadata.csv");
 
         List<BudgetMetadata> allMoviesWithABudget = textFile.map(Utils::splitCommaDelimitedString)
@@ -75,10 +45,10 @@ public class BudgetDriver implements Serializable {
 
         allMoviesWithABudget.stream()
             .forEach(budgetMetadata -> {
-                BudgetStats budgetStats = budgetToStats.computeIfAbsent(budgetMetadata.budget, k -> new BudgetStats());
+                Stats stats = budgetToStats.computeIfAbsent(budgetMetadata.budget, k -> new Stats());
                 if (budgetMetadata.successful)
-                    budgetStats.numSuccessful++;
-                budgetStats.numMovies++;
+                    stats.numSuccessful++;
+                stats.numMovies++;
             });
 
         calculatePopulationMeanAndStdDev(allMoviesWithABudget);
@@ -86,7 +56,7 @@ public class BudgetDriver implements Serializable {
         budgetToStats.entrySet().stream()
             .filter(entry -> entry.getValue().numMovies > 100)
             .forEach(entry -> {
-                BudgetStats otherStats = buildOtherStats(entry.getKey());
+                Stats otherStats = buildOtherStats(entry.getKey());
                 float p1 = entry.getValue().getSuccessProportion();
                 float p2 = otherStats.getSuccessProportion();
                 float confidenceInterval = p1 - p2;
@@ -99,19 +69,15 @@ public class BudgetDriver implements Serializable {
         writeStatisticsToFile(sc);
     }
 
-    private float calculateZ(float confidenceInterval) {
-        return confidenceInterval / stdDev;
-    }
-
-    private BudgetStats buildOtherStats(Integer key) {
-        BudgetStats budgetStats = new BudgetStats();
+    private Stats buildOtherStats(Integer key) {
+        Stats stats = new Stats();
         budgetToStats.entrySet().stream()
             .filter(entry -> !entry.getKey().equals(key))
             .forEach(entry -> {
-                budgetStats.numMovies += entry.getValue().numMovies;
-                budgetStats.numSuccessful += entry.getValue().numSuccessful;
+                stats.numMovies += entry.getValue().numMovies;
+                stats.numSuccessful += entry.getValue().numSuccessful;
             });
-        return budgetStats;
+        return stats;
     }
 
     private void writeStatisticsToFile(JavaSparkContext sc) {
@@ -125,7 +91,7 @@ public class BudgetDriver implements Serializable {
             .filter(entry -> entry.getValue().numMovies > 100)
             .sorted((e1, e2) -> e1.getValue().compareTo(e2.getValue()))
             .forEach(e -> {
-                BudgetStats stats = e.getValue();
+                Stats stats = e.getValue();
                 writeMe.add(String.format("%d: %s", e.getKey(), stats));
             });
 
@@ -141,11 +107,11 @@ public class BudgetDriver implements Serializable {
         budgetMetadatas.stream()
             .forEach(budgetMetadata -> {
                 if (budgetMetadata.successful)
-                    totalNumSuccessfulMovies++;
-                totalNumMovies++;
+                    numSuccessful++;
+                numMovies++;
             });
-        populationMean = totalNumSuccessfulMovies / (float) totalNumMovies;
+        populationMean = numSuccessful / (float) numMovies;
 
-        stdDev = (float) Math.sqrt(2 * populationMean * (1 - populationMean) / totalNumMovies);
+        stdDev = (float) Math.sqrt(2 * populationMean * (1 - populationMean) / numMovies);
     }
 }
