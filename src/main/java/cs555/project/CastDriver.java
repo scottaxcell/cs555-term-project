@@ -1,27 +1,23 @@
 package cs555.project;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import cs555.project.utils.Utils;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
-import org.apache.spark.broadcast.Broadcast;
-import org.mortbay.util.ajax.JSON;
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.JsonParser;
+import org.codehaus.jackson.map.ObjectMapper;
 
+import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class CastDriver extends Driver {
     public static void main(String[] args) {
         new CastDriver().run();
     }
 
-    private final Map<String, Stats> wordToStats = new HashMap<>();
+    private final Map<String, Stats> characterToStats = new HashMap<>();
 
     private static class MovieMetadata implements Serializable {
         final int id;
@@ -35,13 +31,11 @@ public class CastDriver extends Driver {
 
     private static class CastMetadata implements Serializable {
         final int id;
-        final JsonNode cast;
-        final boolean successful;
+        final String cast;
 
-        public CastMetadata(int id, JsonNode cast, boolean successful) {
+        public CastMetadata(int id, String cast) {
             this.id = id;
             this.cast = cast;
-            this.successful = successful;
         }
     }
 
@@ -60,59 +54,77 @@ public class CastDriver extends Driver {
             .map(split -> new MovieMetadata(MoviesMetadataHelper.parseId(split), MoviesMetadataHelper.isMovieSuccessfulByVoteAverage(split)))
             .collect();
 
-        Broadcast<List<MovieMetadata>> allMoviesMetadataBroadcast = sc.broadcast(allMovies);
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        Broadcast<ObjectMapper> objectMapperBroadcast = sc.broadcast(objectMapper);
-
 //        textFile = sc.textFile(TBD/data/credist.csv);
         textFile = sc.textFile("/s/chopin/a/grad/sgaxcell/cs555-term-project/data/credits.csv");
-        textFile.map(Utils::splitCommaDelimitedString)
-            .filter(split -> MoviesMetadataHelper.isRowValid(split) &&
-                MoviesMetadataHelper.parseId(split) != null)
-            .map(split -> {
-                objectMapperBroadcast.try {
-                    JsonNode jsonNode = objectMapper.readTree(json);
-                    Utils.debug(jsonNode);
-                }
-                catch (JsonProcessingException e) {
-                    e.printStackTrace();
-                }
-            })
+        List<CastMetadata> castMetadatas = textFile.map(Utils::splitCommaDelimitedString)
+            .filter(split -> CreditsHelper.isRowValid(split) &&
+                CreditsHelper.parseId(split) != null)
+            .map(split -> new CastMetadata(CreditsHelper.parseId(split), CreditsHelper.parseCast(split)))
             .collect();
-//        JsonNode string = objectMapper.readTree("string");
-//        allMovies.stream()
-//            .forEach(movieMetadata -> {
-//                String[] words = movieMetadata.overview.split(" ");
-//                for (String word : words) {
-//                    Stats stats = wordToStats.computeIfAbsent(word, k -> new Stats());
-//                    if (movieMetadata.successful)
-//                        stats.numSuccessful++;
-//                    stats.numMovies++;
-//                }
-//            });
-//
-//        calculatePopulationMeanAndStdDev(allMovies);
-//
-//        wordToStats.entrySet().stream()
-//            .filter(entry -> entry.getValue().numMovies > 100)
-//            .forEach(entry -> {
-//                Stats otherStats = buildOtherStats(entry.getKey());
-//                float p1 = entry.getValue().getSuccessProportion();
-//                float p2 = otherStats.getSuccessProportion();
-//                float confidenceInterval = p1 - p2;
-//                entry.getValue().confidenceInterval = confidenceInterval;
-//
-//                float z = calculateZ(confidenceInterval);
-//                entry.getValue().z = z;
-//            });
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        castMetadatas.stream()
+            .filter(castMetadata -> !castMetadata.cast.equals("[]"))
+            .forEach(castMetadata -> {
+                MovieMetadata movieMetadata = getMovieMetadata(allMovies, castMetadata.id);
+                if (movieMetadata != null) {
+                    String fixedCast = castMetadata.cast.substring(1, castMetadata.cast.length() - 1)
+                        .replace(": None", ": \'\'")
+                        .replace("\\", "")
+                        .replace("\"\"", "\"");
+                    try {
+                        JsonNode jsonNode = objectMapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true).readTree(fixedCast);
+                        Iterator<JsonNode> iterator = jsonNode.iterator();
+                        while (iterator.hasNext()) {
+                            JsonNode node = iterator.next();
+                            JsonNode characterNode = node.get("character");
+                            if (characterNode != null && characterNode.isTextual()) {
+                                String character = characterNode.getTextValue();
+                                if (Utils.isStringValid(character)) {
+                                    Stats stats = characterToStats.computeIfAbsent(character, k -> new Stats());
+                                    if (movieMetadata.successful)
+                                        stats.numSuccessful++;
+                                    stats.numMovies++;
+                                }
+                            }
+                        }
+                    }
+                    catch (IOException ignored) {
+                    }
+                }
+            });
+
+        calculatePopulationMeanAndStdDev(allMovies);
+
+        characterToStats.entrySet().stream()
+            .filter(entry -> entry.getValue().numMovies > 100)
+            .forEach(entry -> {
+                Stats otherStats = buildOtherStats(entry.getKey());
+                float p1 = entry.getValue().getSuccessProportion();
+                float p2 = otherStats.getSuccessProportion();
+                float confidenceInterval = p1 - p2;
+                entry.getValue().confidenceInterval = confidenceInterval;
+
+                float z = calculateZ(confidenceInterval);
+                entry.getValue().z = z;
+            });
 
         writeStatisticsToFile(sc);
     }
 
+    private MovieMetadata getMovieMetadata(List<MovieMetadata> movieMetadatas, int id) {
+        for (MovieMetadata movieMetadata : movieMetadatas) {
+            if (movieMetadata.id == id) {
+                return movieMetadata;
+            }
+        }
+        return null;
+    }
+
     private Stats buildOtherStats(String key) {
         Stats stats = new Stats();
-        wordToStats.entrySet().stream()
+        characterToStats.entrySet().stream()
             .filter(entry -> !entry.getKey().equals(key))
             .forEach(entry -> {
                 stats.numMovies += entry.getValue().numMovies;
@@ -123,12 +135,12 @@ public class CastDriver extends Driver {
 
     private void writeStatisticsToFile(JavaSparkContext sc) {
         List<String> writeMe = new ArrayList<>();
-        writeMe.add("Movie Overview Analysis");
-        writeMe.add("=======================\n");
+        writeMe.add("Movie Character Name Analysis");
+        writeMe.add("=============================\n");
         writeMe.add("Z values > confidence score of 1.96 are statistically significant");
         writeMe.add("-----------------------------------------------------------------\n");
 
-        wordToStats.entrySet().stream()
+        characterToStats.entrySet().stream()
             .filter(entry -> entry.getValue().numMovies > 100)
             .sorted((e1, e2) -> e1.getValue().compareTo(e2.getValue()))
             .forEach(e -> {
@@ -136,21 +148,21 @@ public class CastDriver extends Driver {
                 writeMe.add(String.format("%s: %s", e.getKey(), stats));
             });
 
-        sc.parallelize(writeMe, 1).saveAsTextFile("OverviewAnalysis");
+        sc.parallelize(writeMe, 1).saveAsTextFile("CharacterNameAnalysis");
     }
 
     /**
      * Estimate population mean using sample size
      *
-     * @param movieMetadata
+     * @param movieMetadatas
      */
-    private void calculatePopulationMeanAndStdDev(List<MovieMetadata> movieMetadata) {
-//        movieMetadata.stream()
-//            .forEach(movieMetadata -> {
-//                if (movieMetadata.successful)
-//                    numSuccessful++;
-//                numMovies++;
-//            });
+    private void calculatePopulationMeanAndStdDev(List<MovieMetadata> movieMetadatas) {
+        movieMetadatas.stream()
+            .forEach(movieMetadata -> {
+                if (movieMetadata.successful)
+                    numSuccessful++;
+                numMovies++;
+            });
 
         populationMean = numSuccessful / (float) numMovies;
 
