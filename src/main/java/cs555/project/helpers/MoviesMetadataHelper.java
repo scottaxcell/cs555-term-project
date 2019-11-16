@@ -43,6 +43,11 @@ public class MoviesMetadataHelper {
         return Utils.isStringValid(tagline) ? tagline : null;
     }
 
+    public static String parseTitle(String[] split) {
+        String title = split[ORIGINAL_TITLE_INDEX];
+        return Utils.isStringValid(title) ? title : null;
+    }
+
     public static Integer parseId(String[] split) {
         String idStr = split[ID_INDEX];
         try {
