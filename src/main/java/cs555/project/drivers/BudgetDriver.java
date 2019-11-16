@@ -1,5 +1,6 @@
-package cs555.project;
+package cs555.project.drivers;
 
+import cs555.project.helpers.MoviesMetadataHelper;
 import cs555.project.utils.Utils;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
@@ -11,52 +12,49 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TaglineDriver extends Driver {
+public class BudgetDriver extends Driver {
     public static void main(String[] args) {
-        new TaglineDriver().run();
+        new BudgetDriver().run();
     }
 
-    private final Map<String, Stats> wordToStats = new HashMap<>();
+    private final Map<Integer, Stats> budgetToStats = new HashMap<>();
 
-    private static class TaglineMetadata implements Serializable {
-        final String tagline;
+    private static class BudgetMetadata implements Serializable {
+        final int budget;
         final boolean successful;
 
-        public TaglineMetadata(String tagline, boolean successful) {
-            this.tagline = tagline;
+        BudgetMetadata(int budget, boolean successful) {
+            this.budget = budget;
             this.successful = successful;
         }
     }
 
     private void run() {
-//        SparkConf conf = new SparkConf().setAppName("Tagline Analysis");
-        SparkConf conf = new SparkConf().setMaster("local").setAppName("Tagline Analysis");
+//        SparkConf conf = new SparkConf().setAppName("Budget Analysis");
+        SparkConf conf = new SparkConf().setMaster("local").setAppName("Budget Analysis");
 
         JavaSparkContext sc = new JavaSparkContext(conf);
 
 //        JavaRDD<String> textFile = sc.textFile(TBD/data/movies_metadata.csv);
         JavaRDD<String> textFile = sc.textFile("/s/chopin/a/grad/sgaxcell/cs555-term-project/data/movies_metadata.csv");
 
-        List<TaglineMetadata> allMoviesWithATagline = textFile.map(Utils::splitCommaDelimitedString)
+        List<BudgetMetadata> allMoviesWithABudget = textFile.map(Utils::splitCommaDelimitedString)
             .filter(split -> MoviesMetadataHelper.isRowValid(split) &&
-                MoviesMetadataHelper.parseTagline(split) != null)
-            .map(split -> new TaglineMetadata(MoviesMetadataHelper.parseTagline(split), MoviesMetadataHelper.isMovieSuccessfulByVoteAverage(split)))
+                MoviesMetadataHelper.parseBudget(split) != null)
+            .map(split -> new BudgetMetadata(MoviesMetadataHelper.parseBudget(split), MoviesMetadataHelper.isMovieSuccessfulByVoteAverage(split)))
             .collect();
 
-        allMoviesWithATagline.stream()
-            .forEach(taglineMetadata -> {
-                String[] words = taglineMetadata.tagline.split(" ");
-                for (String word : words) {
-                    Stats stats = wordToStats.computeIfAbsent(word, k -> new Stats());
-                    if (taglineMetadata.successful)
-                        stats.numSuccessful++;
-                    stats.numMovies++;
-                }
+        allMoviesWithABudget.stream()
+            .forEach(budgetMetadata -> {
+                Stats stats = budgetToStats.computeIfAbsent(budgetMetadata.budget, k -> new Stats());
+                if (budgetMetadata.successful)
+                    stats.numSuccessful++;
+                stats.numMovies++;
             });
 
-        calculatePopulationMeanAndStdDev(allMoviesWithATagline);
+        calculatePopulationMeanAndStdDev(allMoviesWithABudget);
 
-        wordToStats.entrySet().stream()
+        budgetToStats.entrySet().stream()
             .filter(entry -> entry.getValue().numMovies > 100)
             .forEach(entry -> {
                 Stats otherStats = buildOtherStats(entry.getKey());
@@ -72,9 +70,9 @@ public class TaglineDriver extends Driver {
         writeStatisticsToFile(sc);
     }
 
-    private Stats buildOtherStats(String key) {
+    private Stats buildOtherStats(Integer key) {
         Stats stats = new Stats();
-        wordToStats.entrySet().stream()
+        budgetToStats.entrySet().stream()
             .filter(entry -> !entry.getKey().equals(key))
             .forEach(entry -> {
                 stats.numMovies += entry.getValue().numMovies;
@@ -85,31 +83,31 @@ public class TaglineDriver extends Driver {
 
     private void writeStatisticsToFile(JavaSparkContext sc) {
         List<String> writeMe = new ArrayList<>();
-        writeMe.add("Movie Tagline Analysis");
-        writeMe.add("======================\n");
+        writeMe.add("Movie Budget Analysis");
+        writeMe.add("=====================\n");
         writeMe.add("Z values > confidence score of 1.96 are statistically significant");
         writeMe.add("-----------------------------------------------------------------\n");
 
-        wordToStats.entrySet().stream()
+        budgetToStats.entrySet().stream()
             .filter(entry -> entry.getValue().numMovies > 100)
             .sorted((e1, e2) -> e1.getValue().compareTo(e2.getValue()))
             .forEach(e -> {
                 Stats stats = e.getValue();
-                writeMe.add(String.format("%s: %s", e.getKey(), stats));
+                writeMe.add(String.format("%d: %s", e.getKey(), stats));
             });
 
-        sc.parallelize(writeMe, 1).saveAsTextFile("TaglineAnalysis");
+        sc.parallelize(writeMe, 1).saveAsTextFile("BudgetAnalysis");
     }
 
     /**
      * Estimate population mean using sample size
      *
-     * @param taglineMetadatas
+     * @param budgetMetadatas
      */
-    private void calculatePopulationMeanAndStdDev(List<TaglineMetadata> taglineMetadatas) {
-        taglineMetadatas.stream()
-            .forEach(taglineMetadata -> {
-                if (taglineMetadata.successful)
+    private void calculatePopulationMeanAndStdDev(List<BudgetMetadata> budgetMetadatas) {
+        budgetMetadatas.stream()
+            .forEach(budgetMetadata -> {
+                if (budgetMetadata.successful)
                     numSuccessful++;
                 numMovies++;
             });

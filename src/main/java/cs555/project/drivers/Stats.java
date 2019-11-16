@@ -1,4 +1,4 @@
-package cs555.project;
+package cs555.project.drivers;
 
 class Stats implements Comparable {
     int numMovies;

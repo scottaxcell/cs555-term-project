@@ -1,4 +1,4 @@
-package cs555.project;
+package cs555.project.helpers;
 
 import cs555.project.utils.Utils;
 

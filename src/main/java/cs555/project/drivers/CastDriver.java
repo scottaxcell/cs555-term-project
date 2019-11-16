@@ -1,5 +1,7 @@
-package cs555.project;
+package cs555.project.drivers;
 
+import cs555.project.helpers.CreditsHelper;
+import cs555.project.helpers.MoviesMetadataHelper;
 import cs555.project.utils.Utils;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
