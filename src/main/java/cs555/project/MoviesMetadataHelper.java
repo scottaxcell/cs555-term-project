@@ -8,6 +8,7 @@ public class MoviesMetadataHelper {
     public static final int ORIGINAL_TITLE_INDEX = 8;
     public static final int OVERVIEW_INDEX = 9;
     public static final int REVENUE_INDEX = 15;
+    public static final int TAGLINE_INDEX = 19;
     public static final int VOTE_AVERAGE_INDEX = 22;
     public static final int NUM_FIELDS = 24;
 
@@ -35,6 +36,11 @@ public class MoviesMetadataHelper {
     public static String parseOverview(String[] split) {
         String overview = split[OVERVIEW_INDEX];
         return Utils.isStringValid(overview) ? overview : null;
+    }
+
+    public static String parseTagline(String[] split) {
+        String tagline = split[TAGLINE_INDEX];
+        return Utils.isStringValid(tagline) ? tagline : null;
     }
 
     public static Integer parseId(String[] split) {
