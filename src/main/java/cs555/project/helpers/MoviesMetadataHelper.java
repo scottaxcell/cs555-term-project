@@ -1,6 +1,7 @@
 package cs555.project.helpers;
 
 import cs555.project.utils.Utils;
+import java.util.HashSet;
 
 public class MoviesMetadataHelper {
     public static final int BUDGET_INDEX = 2;
@@ -8,6 +9,8 @@ public class MoviesMetadataHelper {
     public static final int ORIGINAL_TITLE_INDEX = 8;
     public static final int OVERVIEW_INDEX = 9;
     public static final int REVENUE_INDEX = 15;
+    public static final int RELEASE_DATE_INDEX = 14;
+    public static final int GENRE_INDEX = 3;
     public static final int TAGLINE_INDEX = 19;
     public static final int VOTE_AVERAGE_INDEX = 22;
     public static final int NUM_FIELDS = 24;
@@ -47,6 +50,28 @@ public class MoviesMetadataHelper {
         String title = split[ORIGINAL_TITLE_INDEX];
         return Utils.isStringValid(title) ? title : null;
     }
+
+    public static int parseReleaseMonth(String[] split) {
+      String releaseDateString = split[RELEASE_DATE_INDEX];
+      String[] releaseDateTokens = releaseDateString.split("-");
+      return releaseDateTokens.length == 3 ? Integer.parseInt(releaseDateTokens[1]) : -1;
+   }
+
+   public static String parseGenreString(String[] split) {
+      String genresString = split[GENRE_INDEX];
+      return genresString.length() > 0 ? genresString : null;
+   }
+
+   public static HashSet<String> parseGenres(String[] split) {
+      HashSet<String> movieGenres = new HashSet<String>();
+      String genresString = split[GENRE_INDEX];
+      String[] genres = genresString.split("},");
+      for (String genre : genres) {
+         String[] tokens = genre.split("\'");
+         if (tokens.length >= 5) movieGenres.add(tokens[5]);
+      }
+      return movieGenres.size() > 0 ? movieGenres : null;
+   }
 
     public static Integer parseId(String[] split) {
         String idStr = split[ID_INDEX];
