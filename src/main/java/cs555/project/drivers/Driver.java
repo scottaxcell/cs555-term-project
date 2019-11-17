@@ -10,6 +10,9 @@ import java.io.Serializable;
  * zc = 1.96 for 95% confidence
  */
 class Driver implements Serializable {
+    static final String HDFS_SERVER = "frankfort:53500"; // replace with your personal HDFS server here
+    static final String HDFS_MOVIES_METADATA = String.format("hdfs://%s/data/movies_metadata.csv", HDFS_SERVER);
+    static final String HDFS_CREDITS = String.format("hdfs://%s/data/credits.csv", HDFS_SERVER);
     int numSuccessful;
     int numMovies;
     float populationMean;

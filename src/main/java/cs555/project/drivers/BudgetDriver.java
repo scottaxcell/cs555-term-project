@@ -30,15 +30,15 @@ public class BudgetDriver extends Driver {
     }
 
     private void run() {
-//        SparkConf conf = new SparkConf().setAppName("Budget Analysis");
-        SparkConf conf = new SparkConf().setMaster("local").setAppName("Budget Analysis");
+        SparkConf conf = new SparkConf().setAppName("Budget Analysis");
+//        SparkConf conf = new SparkConf().setMaster("local[4]").setAppName("Budget Analysis");
 
         JavaSparkContext sc = new JavaSparkContext(conf);
 
-//        JavaRDD<String> textFile = sc.textFile(TBD/data/movies_metadata.csv);
-        JavaRDD<String> textFile = sc.textFile("/s/chopin/a/grad/sgaxcell/cs555-term-project/data/movies_metadata.csv");
+        JavaRDD<String> rdd = sc.textFile(HDFS_MOVIES_METADATA);
+//        JavaRDD<String> rdd = sc.textFile("/s/chopin/a/grad/sgaxcell/cs555-term-project/data/movies_metadata.csv");
 
-        List<BudgetMetadata> allMoviesWithABudget = textFile.map(Utils::splitCommaDelimitedString)
+        List<BudgetMetadata> allMoviesWithABudget = rdd.map(Utils::splitCommaDelimitedString)
             .filter(split -> MoviesMetadataHelper.isRowValid(split) &&
                 MoviesMetadataHelper.parseBudget(split) != null)
             .map(split -> new BudgetMetadata(MoviesMetadataHelper.parseBudget(split), MoviesMetadataHelper.isMovieSuccessfulByVoteAverage(split)))

@@ -30,15 +30,15 @@ public class TitleDriver extends Driver {
     }
 
     private void run() {
-//        SparkConf conf = new SparkConf().setAppName("Title Analysis");
-        SparkConf conf = new SparkConf().setMaster("local").setAppName("Title Analysis");
+        SparkConf conf = new SparkConf().setAppName("Title Analysis");
+//        SparkConf conf = new SparkConf().setMaster("local[4]").setAppName("Title Analysis");
 
         JavaSparkContext sc = new JavaSparkContext(conf);
 
-//        JavaRDD<String> textFile = sc.textFile(TBD/data/movies_metadata.csv);
-        JavaRDD<String> textFile = sc.textFile("/s/chopin/a/grad/sgaxcell/cs555-term-project/data/movies_metadata.csv");
+        JavaRDD<String> rdd = sc.textFile(HDFS_MOVIES_METADATA);
+//        JavaRDD<String> rdd = sc.textFile("/s/chopin/a/grad/sgaxcell/cs555-term-project/data/movies_metadata.csv");
 
-        List<TitleMetadata> allMoviesWithATitle = textFile.map(Utils::splitCommaDelimitedString)
+        List<TitleMetadata> allMoviesWithATitle = rdd.map(Utils::splitCommaDelimitedString)
             .filter(split -> MoviesMetadataHelper.isRowValid(split) &&
                 MoviesMetadataHelper.parseTitle(split) != null)
             .map(split -> new TitleMetadata(MoviesMetadataHelper.parseTitle(split), MoviesMetadataHelper.isMovieSuccessfulByVoteAverage(split)))

@@ -30,15 +30,15 @@ public class TaglineDriver extends Driver {
     }
 
     private void run() {
-//        SparkConf conf = new SparkConf().setAppName("Tagline Analysis");
-        SparkConf conf = new SparkConf().setMaster("local").setAppName("Tagline Analysis");
+        SparkConf conf = new SparkConf().setAppName("Tagline Analysis");
+//        SparkConf conf = new SparkConf().setMaster("local[4]").setAppName("Tagline Analysis");
 
         JavaSparkContext sc = new JavaSparkContext(conf);
 
-//        JavaRDD<String> textFile = sc.textFile(TBD/data/movies_metadata.csv);
-        JavaRDD<String> textFile = sc.textFile("/s/chopin/a/grad/sgaxcell/cs555-term-project/data/movies_metadata.csv");
+        JavaRDD<String> rdd = sc.textFile(HDFS_MOVIES_METADATA);
+//        JavaRDD<String> rdd = sc.textFile("/s/chopin/a/grad/sgaxcell/cs555-term-project/data/movies_metadata.csv");
 
-        List<TaglineMetadata> allMoviesWithATagline = textFile.map(Utils::splitCommaDelimitedString)
+        List<TaglineMetadata> allMoviesWithATagline = rdd.map(Utils::splitCommaDelimitedString)
             .filter(split -> MoviesMetadataHelper.isRowValid(split) &&
                 MoviesMetadataHelper.parseTagline(split) != null)
             .map(split -> new TaglineMetadata(MoviesMetadataHelper.parseTagline(split), MoviesMetadataHelper.isMovieSuccessfulByVoteAverage(split)))

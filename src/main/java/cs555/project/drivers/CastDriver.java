@@ -42,23 +42,23 @@ public class CastDriver extends Driver {
     }
 
     private void run() {
-//        SparkConf conf = new SparkConf().setAppName("Cast Analysis");
-        SparkConf conf = new SparkConf().setMaster("local").setAppName("Cast Analysis");
+        SparkConf conf = new SparkConf().setAppName("Cast Analysis");
+//        SparkConf conf = new SparkConf().setMaster("local[4]").setAppName("Cast Analysis");
 
         JavaSparkContext sc = new JavaSparkContext(conf);
 
-//        JavaRDD<String> textFile = sc.textFile(TBD/data/movies_metadata.csv);
-        JavaRDD<String> textFile = sc.textFile("/s/chopin/a/grad/sgaxcell/cs555-term-project/data/movies_metadata.csv");
+        JavaRDD<String> rdd = sc.textFile(HDFS_MOVIES_METADATA);
+//        JavaRDD<String> rdd = sc.textFile("/s/chopin/a/grad/sgaxcell/cs555-term-project/data/movies_metadata.csv");
 
-        List<MovieMetadata> allMovies = textFile.map(Utils::splitCommaDelimitedString)
+        List<MovieMetadata> allMovies = rdd.map(Utils::splitCommaDelimitedString)
             .filter(split -> MoviesMetadataHelper.isRowValid(split) &&
                 MoviesMetadataHelper.parseId(split) != null)
             .map(split -> new MovieMetadata(MoviesMetadataHelper.parseId(split), MoviesMetadataHelper.isMovieSuccessfulByVoteAverage(split)))
             .collect();
 
-//        textFile = sc.textFile(TBD/data/credist.csv);
-        textFile = sc.textFile("/s/chopin/a/grad/sgaxcell/cs555-term-project/data/credits.csv");
-        List<CastMetadata> castMetadatas = textFile.map(Utils::splitCommaDelimitedString)
+        rdd = sc.textFile(HDFS_CREDITS);
+//        textFile = sc.textFile("/s/chopin/a/grad/sgaxcell/cs555-term-project/data/credits.csv");
+        List<CastMetadata> castMetadatas = rdd.map(Utils::splitCommaDelimitedString)
             .filter(split -> CreditsHelper.isRowValid(split) &&
                 CreditsHelper.parseId(split) != null)
             .map(split -> new CastMetadata(CreditsHelper.parseId(split), CreditsHelper.parseCast(split)))
@@ -150,7 +150,7 @@ public class CastDriver extends Driver {
                 writeMe.add(String.format("%s: %s", e.getKey(), stats));
             });
 
-        sc.parallelize(writeMe, 1).saveAsTextFile("CharacterNameAnalysis");
+        sc.parallelize(writeMe, 1).saveAsTextFile("CastAnalysis");
     }
 
     /**

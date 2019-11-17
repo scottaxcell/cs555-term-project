@@ -30,15 +30,15 @@ public class OverviewDriver extends Driver {
     }
 
     private void run() {
-//        SparkConf conf = new SparkConf().setAppName("Overview Analysis");
-        SparkConf conf = new SparkConf().setMaster("local").setAppName("Overview Analysis");
+        SparkConf conf = new SparkConf().setAppName("Overview Analysis");
+//        SparkConf conf = new SparkConf().setMaster("local[4]").setAppName("Overview Analysis");
 
         JavaSparkContext sc = new JavaSparkContext(conf);
 
-//        JavaRDD<String> textFile = sc.textFile(TBD/data/movies_metadata.csv);
-        JavaRDD<String> textFile = sc.textFile("/s/chopin/a/grad/sgaxcell/cs555-term-project/data/movies_metadata.csv");
+        JavaRDD<String> rdd = sc.textFile(HDFS_MOVIES_METADATA);
+//        JavaRDD<String> rdd = sc.textFile("/s/chopin/a/grad/sgaxcell/cs555-term-project/data/movies_metadata.csv");
 
-        List<OverviewMetadata> allMoviesWithAnOverview = textFile.map(Utils::splitCommaDelimitedString)
+        List<OverviewMetadata> allMoviesWithAnOverview = rdd.map(Utils::splitCommaDelimitedString)
             .filter(split -> MoviesMetadataHelper.isRowValid(split) &&
                 MoviesMetadataHelper.parseOverview(split) != null)
             .map(split -> new OverviewMetadata(MoviesMetadataHelper.parseOverview(split), MoviesMetadataHelper.isMovieSuccessfulByVoteAverage(split)))
