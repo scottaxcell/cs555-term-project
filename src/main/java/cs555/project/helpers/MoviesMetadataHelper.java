@@ -1,6 +1,11 @@
 package cs555.project.helpers;
 
 import cs555.project.utils.Utils;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 
 public class MoviesMetadataHelper {
@@ -14,6 +19,7 @@ public class MoviesMetadataHelper {
     public static final int TAGLINE_INDEX = 19;
     public static final int VOTE_AVERAGE_INDEX = 22;
     public static final int NUM_FIELDS = 24;
+    public static final String DATE_PATTERN = "yyyy-MM-dd";
 
     public static final float VOTE_AVERAGE_SUCCESS_BASELINE = 7.0f;
 
@@ -55,6 +61,25 @@ public class MoviesMetadataHelper {
       String releaseDateString = split[RELEASE_DATE_INDEX];
       String[] releaseDateTokens = releaseDateString.split("-");
       return releaseDateTokens.length == 3 ? Integer.parseInt(releaseDateTokens[1]) : -1;
+   }
+    
+   public static int parseReleaseWeek(String[] split) {
+	  String releaseDateString = split[RELEASE_DATE_INDEX];
+      String[] releaseDateTokens = releaseDateString.split("-");
+      if (releaseDateTokens.length == 3) {
+    	  SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_PATTERN);
+    	  try {
+			Date date = simpleDateFormat.parse(releaseDateString);
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(date);
+			int weekNumber = calendar.get(Calendar.WEEK_OF_YEAR);
+			return weekNumber;
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+      }
+      return -1;
+      //return releaseDateTokens.length == 3 ? Integer.parseInt(releaseDateTokens[1]) : -1;
    }
 
    public static String parseGenreString(String[] split) {

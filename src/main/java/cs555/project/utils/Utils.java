@@ -1,10 +1,13 @@
 package cs555.project.utils;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class Utils {
     private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm:ss");
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("MM-dd");
 
     public static void debug(Object o) {
         System.out.println(String.format("DEBUG: [%s] %s", TIME_FORMAT.format(new Date()), o));
@@ -31,5 +34,19 @@ public class Utils {
         for (int i = 0; i < split.length; i++)
             split[i] = split[i].replaceAll(";", ",");
         return split;
+    }
+    
+    public static String getDateFromWeekNumber(int weekNumber, String day) {
+		Calendar cal = Calendar.getInstance(Locale.US);
+		cal.set(Calendar.WEEK_OF_YEAR, weekNumber);
+		
+		if (day.equalsIgnoreCase("start")) {
+			cal.set(Calendar.DAY_OF_WEEK, Calendar.TUESDAY);
+		} else if (day.equalsIgnoreCase("end")) {
+			cal.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
+			cal.add(Calendar.DAY_OF_MONTH, 2);
+		}
+		
+		return DATE_FORMAT.format(cal.getTime());
     }
 }
