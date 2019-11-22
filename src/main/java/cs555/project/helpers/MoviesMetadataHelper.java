@@ -1,5 +1,6 @@
 package cs555.project.helpers;
 
+import cs555.project.drivers.GrossStats;
 import cs555.project.utils.Utils;
 
 import java.text.ParseException;
@@ -42,6 +43,17 @@ public class MoviesMetadataHelper {
         return null;
     }
 
+    public static Integer parseRevenue(String[] split) {
+        String revenueStr = split[REVENUE_INDEX];
+        try {
+            int revenue = Integer.parseInt(revenueStr);
+            return revenue > 0 ? revenue : null;
+        }
+        catch (NumberFormatException ignored) {
+        }
+        return null;
+    }
+    
     public static String parseOverview(String[] split) {
         String overview = split[OVERVIEW_INDEX];
         return Utils.isStringValid(overview) ? overview : null;
@@ -118,5 +130,21 @@ public class MoviesMetadataHelper {
         catch (NumberFormatException ignored) {
         }
         return false;
+    }
+    
+    public static GrossStats parseGrossStatsData(String[] split) {
+    	GrossStats grossStats = null;
+    	if (split.length > 15) {
+    		if (!split[BUDGET_INDEX].isEmpty() && !split[REVENUE_INDEX].isEmpty()) {
+    			Integer budget = parseBudget(split);
+            	Integer revenue = parseRevenue(split);
+            	
+            	if (budget != null && revenue != null) {
+            		
+            		grossStats = new GrossStats((int) budget, (int) revenue);
+            	}
+    		}
+    	}
+    	return grossStats;
     }
 }
