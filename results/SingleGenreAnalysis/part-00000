@@ -1,0 +1,26 @@
+Movie Single Genre Analysis
+=====================
+
+Z values > confidence score of 1.96 are statistically significant
+-----------------------------------------------------------------
+
+Horror: Stats{numMovies=4666, numSuccessful=265, confidenceInterval=-0.11, z=-43.57}
+Thriller: Stats{numMovies=7620, numSuccessful=775, confidenceInterval=-0.06, z=-25.44}
+Science Fiction: Stats{numMovies=3045, numSuccessful=301, confidenceInterval=-0.06, z=-25.30}
+Western: Stats{numMovies=1042, numSuccessful=106, confidenceInterval=-0.06, z=-23.57}
+Action: Stats{numMovies=6589, numSuccessful=694, confidenceInterval=-0.06, z=-23.56}
+TV Movie: Stats{numMovies=765, numSuccessful=101, confidenceInterval=-0.03, z=-11.23}
+Family: Stats{numMovies=2770, numSuccessful=383, confidenceInterval=-0.02, z=-8.91}
+Adventure: Stats{numMovies=3491, numSuccessful=484, confidenceInterval=-0.02, z=-8.82}
+Comedy: Stats{numMovies=13159, numSuccessful=1892, confidenceInterval=-0.02, z=-7.51}
+Foreign: Stats{numMovies=1621, numSuccessful=238, confidenceInterval=-0.01, z=-5.30}
+Mystery: Stats{numMovies=2464, numSuccessful=363, confidenceInterval=-0.01, z=-5.14}
+Romance: Stats{numMovies=6725, numSuccessful=1031, confidenceInterval=-0.01, z=-2.81}
+Crime: Stats{numMovies=4305, numSuccessful=687, confidenceInterval=-0.00, z=-0.08}
+Fantasy: Stats{numMovies=2307, numSuccessful=373, confidenceInterval=0.00, z=0.78}
+Drama: Stats{numMovies=20235, numSuccessful=3902, confidenceInterval=0.04, z=17.06}
+War: Stats{numMovies=1322, numSuccessful=303, confidenceInterval=0.07, z=28.27}
+Music: Stats{numMovies=1592, numSuccessful=394, confidenceInterval=0.09, z=35.83}
+History: Stats{numMovies=1396, numSuccessful=358, confidenceInterval=0.10, z=39.40}
+Animation: Stats{numMovies=1930, numSuccessful=525, confidenceInterval=0.11, z=46.02}
+Documentary: Stats{numMovies=3924, numSuccessful=1360, confidenceInterval=0.20, z=78.35}

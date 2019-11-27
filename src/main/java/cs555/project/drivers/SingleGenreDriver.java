@@ -103,7 +103,7 @@ public class SingleGenreDriver extends Driver {
                 writeMe.add(String.format("%s: %s", e.getKey(), stats));
             });
 
-            sc.parallelize(writeMe, 1).saveAsTextFile("hdfs://pierre:42500/GenreAnalysis");
+            sc.parallelize(writeMe, 1).saveAsTextFile("hdfs://pierre:42500/SingleGenreAnalysis");
     }
 
     /**
