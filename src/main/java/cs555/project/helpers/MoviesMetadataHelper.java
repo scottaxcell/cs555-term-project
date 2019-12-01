@@ -29,6 +29,14 @@ public class MoviesMetadataHelper {
             return false;
         if (split[0].equalsIgnoreCase("adult")) // header
             return false;
+        String voteAverageStr = split[VOTE_AVERAGE_INDEX];
+        try {
+           float voteAverage = Float.parseFloat(voteAverageStr); // no data for review defaults to 0, ignore
+           if (voteAverage < .0001) return false;
+        }
+        catch (NumberFormatException ignored) {
+           return false;
+        }
         return true;
     }
 
