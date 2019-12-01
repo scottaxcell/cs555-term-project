@@ -129,6 +129,17 @@ public class MoviesMetadataHelper {
         return null;
     }
 
+    public static double getVoteAverage(String[] split) {
+      String voteAverageStr = split[VOTE_AVERAGE_INDEX];
+      try {
+         float voteAverage = Float.parseFloat(voteAverageStr);
+         return voteAverage;
+      }
+      catch (NumberFormatException ignored) {
+      }
+      return -1;
+    }
+
     public static boolean isMovieSuccessfulByVoteAverage(String[] split) {
         String voteAverageStr = split[VOTE_AVERAGE_INDEX];
         try {
