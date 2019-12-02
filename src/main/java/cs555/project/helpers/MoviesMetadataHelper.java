@@ -80,7 +80,10 @@ public class MoviesMetadataHelper {
     public static int parseReleaseMonth(String[] split) {
       String releaseDateString = split[RELEASE_DATE_INDEX];
       String[] releaseDateTokens = releaseDateString.split("-");
-      return releaseDateTokens.length == 3 ? Integer.parseInt(releaseDateTokens[1]) : -1;
+      if (isDateValid(releaseDateTokens, releaseDateString)) {
+    	  return releaseDateTokens.length == 3 ? Integer.parseInt(releaseDateTokens[1]) : -1;
+      }
+      return -1;
    }
     
    public static int parseReleaseWeek(String[] split) {
@@ -93,13 +96,14 @@ public class MoviesMetadataHelper {
 			Calendar calendar = Calendar.getInstance();
 			calendar.setTime(date);
 			int weekNumber = calendar.get(Calendar.WEEK_OF_YEAR);
-			return weekNumber;
+			if (isDateValid(releaseDateTokens, releaseDateString)) {
+		    	  return weekNumber;
+		      }
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
       }
       return -1;
-      //return releaseDateTokens.length == 3 ? Integer.parseInt(releaseDateTokens[1]) : -1;
    }
 
    public static String parseGenreString(String[] split) {
@@ -165,5 +169,22 @@ public class MoviesMetadataHelper {
     		}
     	}
     	return grossStats;
+    }
+    
+    private static boolean isDateValid(String[] releaseDateTokens, String releaseDateString) {
+        if (releaseDateTokens.length == 3) {
+      	  SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_PATTERN);
+      	  try {
+      		  Date date = simpleDateFormat.parse(releaseDateString);
+      		  Calendar calendar = Calendar.getInstance();
+      		  calendar.setTime(date);
+      		  if (calendar.get(Calendar.MONTH) == Calendar.JANUARY && calendar.get(Calendar.DATE) == 1) {
+      			  return false;
+      		  }
+      	  } catch (ParseException e) {
+    			e.printStackTrace();
+    		}
+        }
+        return true;
     }
 }

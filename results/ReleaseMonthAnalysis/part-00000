@@ -4,15 +4,15 @@ Release Month Analysis
 Z values > confidence score of 1.96 are statistically significant
 -----------------------------------------------------------------
 
-7: Stats{numMovies=2635, numSuccessful=389, confidenceInterval=-0.02, z=-9.42}
-1: Stats{numMovies=5900, numSuccessful=931, confidenceInterval=-0.01, z=-5.51}
-3: Stats{numMovies=3548, numSuccessful=563, confidenceInterval=-0.01, z=-4.81}
-8: Stats{numMovies=3393, numSuccessful=539, confidenceInterval=-0.01, z=-4.72}
-6: Stats{numMovies=3142, numSuccessful=507, confidenceInterval=-0.01, z=-3.61}
-4: Stats{numMovies=3450, numSuccessful=566, confidenceInterval=-0.01, z=-2.47}
-2: Stats{numMovies=3028, numSuccessful=510, confidenceInterval=-0.00, z=-0.57}
-5: Stats{numMovies=3334, numSuccessful=572, confidenceInterval=0.00, z=0.79}
-11: Stats{numMovies=3655, numSuccessful=653, confidenceInterval=0.01, z=3.89}
-9: Stats{numMovies=4832, numSuccessful=884, confidenceInterval=0.01, z=5.92}
-10: Stats{numMovies=4603, numSuccessful=852, confidenceInterval=0.02, z=6.85}
-12: Stats{numMovies=3782, numSuccessful=724, confidenceInterval=0.02, z=9.48}
+7: Stats{numMovies=2484, numSuccessful=389, confidenceInterval=-0.03, z=-9.71}
+1: Stats{numMovies=2574, numSuccessful=422, confidenceInterval=-0.02, z=-6.87}
+8: Stats{numMovies=3197, numSuccessful=539, confidenceInterval=-0.01, z=-5.14}
+3: Stats{numMovies=3289, numSuccessful=563, confidenceInterval=-0.01, z=-4.13}
+6: Stats{numMovies=2962, numSuccessful=507, confidenceInterval=-0.01, z=-4.09}
+4: Stats{numMovies=3227, numSuccessful=566, confidenceInterval=-0.01, z=-2.44}
+2: Stats{numMovies=2829, numSuccessful=510, confidenceInterval=-0.00, z=-0.50}
+5: Stats{numMovies=3153, numSuccessful=572, confidenceInterval=-0.00, z=-0.05}
+11: Stats{numMovies=3405, numSuccessful=653, confidenceInterval=0.01, z=4.08}
+9: Stats{numMovies=4582, numSuccessful=884, confidenceInterval=0.01, z=4.70}
+10: Stats{numMovies=4302, numSuccessful=852, confidenceInterval=0.02, z=6.76}
+12: Stats{numMovies=3551, numSuccessful=724, confidenceInterval=0.02, z=8.95}
