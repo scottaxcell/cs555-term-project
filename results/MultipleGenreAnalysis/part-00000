@@ -4,73 +4,66 @@ Movie Multiple Genre Analysis
 Z values > confidence score of 1.96 are statistically significant
 -----------------------------------------------------------------
 
-[Horror, Thriller, Science Fiction]: Stats{numMovies=119, numSuccessful=3, confidenceInterval=-0.15, z=-56.70}
-[Horror, Thriller]: Stats{numMovies=679, numSuccessful=19, confidenceInterval=-0.14, z=-56.35}
-[Horror, Science Fiction]: Stats{numMovies=267, numSuccessful=8, confidenceInterval=-0.14, z=-55.03}
-[Action, Science Fiction]: Stats{numMovies=125, numSuccessful=5, confidenceInterval=-0.13, z=-50.92}
-[Horror]: Stats{numMovies=972, numSuccessful=45, confidenceInterval=-0.13, z=-49.44}
-[Thriller, Action]: Stats{numMovies=337, numSuccessful=15, confidenceInterval=-0.13, z=-49.40}
-[Science Fiction]: Stats{numMovies=197, numSuccessful=10, confidenceInterval=-0.12, z=-46.79}
-[Thriller]: Stats{numMovies=465, numSuccessful=24, confidenceInterval=-0.12, z=-46.75}
-[Thriller, Action, Science Fiction]: Stats{numMovies=117, numSuccessful=6, confidenceInterval=-0.12, z=-46.50}
-[Thriller, Action, Adventure]: Stats{numMovies=113, numSuccessful=6, confidenceInterval=-0.12, z=-45.79}
-[Western, Action]: Stats{numMovies=129, numSuccessful=7, confidenceInterval=-0.12, z=-45.35}
-[Horror, Thriller, Mystery]: Stats{numMovies=231, numSuccessful=13, confidenceInterval=-0.11, z=-44.67}
-[Horror, Comedy]: Stats{numMovies=264, numSuccessful=20, confidenceInterval=-0.10, z=-37.06}
-[Family, Comedy]: Stats{numMovies=232, numSuccessful=18, confidenceInterval=-0.09, z=-36.31}
-[Adventure]: Stats{numMovies=110, numSuccessful=9, confidenceInterval=-0.09, z=-34.56}
-[Action, Adventure]: Stats{numMovies=120, numSuccessful=10, confidenceInterval=-0.09, z=-33.97}
-[Drama, Horror, Thriller]: Stats{numMovies=167, numSuccessful=14, confidenceInterval=-0.09, z=-33.81}
-[Action, Comedy, Crime]: Stats{numMovies=118, numSuccessful=10, confidenceInterval=-0.09, z=-33.42}
-[Romance, Comedy]: Stats{numMovies=1140, numSuccessful=107, confidenceInterval=-0.08, z=-30.58}
-[Drama, Thriller, Action]: Stats{numMovies=227, numSuccessful=22, confidenceInterval=-0.07, z=-28.73}
-[Crime]: Stats{numMovies=134, numSuccessful=13, confidenceInterval=-0.07, z=-28.63}
-[Western]: Stats{numMovies=318, numSuccessful=32, confidenceInterval=-0.07, z=-27.34}
-[Action]: Stats{numMovies=278, numSuccessful=29, confidenceInterval=-0.07, z=-25.86}
-[Drama, Action]: Stats{numMovies=263, numSuccessful=28, confidenceInterval=-0.06, z=-25.01}
-[Thriller, Crime]: Stats{numMovies=147, numSuccessful=17, confidenceInterval=-0.05, z=-21.35}
-[Drama, Horror]: Stats{numMovies=137, numSuccessful=16, confidenceInterval=-0.05, z=-20.90}
-[Action, Comedy]: Stats{numMovies=280, numSuccessful=33, confidenceInterval=-0.05, z=-20.55}
-[Thriller, Action, Crime]: Stats{numMovies=246, numSuccessful=30, confidenceInterval=-0.05, z=-18.93}
-[Drama, Thriller]: Stats{numMovies=676, numSuccessful=89, confidenceInterval=-0.04, z=-15.27}
-[Action, Drama, Thriller, Crime]: Stats{numMovies=229, numSuccessful=32, confidenceInterval=-0.03, z=-11.95}
-[Drama, Romance, Comedy]: Stats{numMovies=1029, numSuccessful=145, confidenceInterval=-0.03, z=-11.70}
-[Comedy]: Stats{numMovies=3616, numSuccessful=532, confidenceInterval=-0.03, z=-9.83}
-[Drama, TV Movie]: Stats{numMovies=110, numSuccessful=16, confidenceInterval=-0.02, z=-9.68}
-[Foreign, Drama, Romance]: Stats{numMovies=149, numSuccessful=22, confidenceInterval=-0.02, z=-8.83}
-[Drama, Thriller, Romance]: Stats{numMovies=106, numSuccessful=16, confidenceInterval=-0.02, z=-7.53}
-[Drama, Thriller, Mystery]: Stats{numMovies=211, numSuccessful=32, confidenceInterval=-0.02, z=-7.27}
-[Thriller, Mystery]: Stats{numMovies=164, numSuccessful=25, confidenceInterval=-0.02, z=-6.96}
-[Romance, Music, Comedy]: Stats{numMovies=135, numSuccessful=22, confidenceInterval=-0.01, z=-2.83}
-[Drama, Music]: Stats{numMovies=200, numSuccessful=33, confidenceInterval=-0.01, z=-2.04}
-[Action, Adventure, Science Fiction]: Stats{numMovies=117, numSuccessful=20, confidenceInterval=0.00, z=0.29}
-[Drama, Action, Crime]: Stats{numMovies=180, numSuccessful=31, confidenceInterval=0.00, z=0.79}
-[Drama, Mystery]: Stats{numMovies=115, numSuccessful=20, confidenceInterval=0.00, z=1.45}
-[Drama, Action, Adventure]: Stats{numMovies=131, numSuccessful=23, confidenceInterval=0.01, z=2.10}
-[Drama, Family]: Stats{numMovies=243, numSuccessful=43, confidenceInterval=0.01, z=2.65}
-[Drama, Family, Comedy]: Stats{numMovies=128, numSuccessful=23, confidenceInterval=0.01, z=3.71}
-[Animation, Family]: Stats{numMovies=226, numSuccessful=42, confidenceInterval=0.02, z=6.13}
-[Drama, Crime]: Stats{numMovies=603, numSuccessful=112, confidenceInterval=0.02, z=6.14}
-[Animation, Family, Comedy]: Stats{numMovies=112, numSuccessful=21, confidenceInterval=0.02, z=6.76}
-[Music, Comedy]: Stats{numMovies=141, numSuccessful=27, confidenceInterval=0.02, z=8.33}
-[Drama, Thriller, Crime]: Stats{numMovies=428, numSuccessful=82, confidenceInterval=0.02, z=8.42}
-[Drama, Comedy]: Stats{numMovies=1663, numSuccessful=321, confidenceInterval=0.02, z=9.26}
-[Foreign, Drama]: Stats{numMovies=298, numSuccessful=59, confidenceInterval=0.03, z=10.91}
-[Comedy, Crime]: Stats{numMovies=197, numSuccessful=40, confidenceInterval=0.03, z=12.86}
-[Drama, Romance, Music]: Stats{numMovies=125, numSuccessful=26, confidenceInterval=0.04, z=14.78}
-[Drama, Romance]: Stats{numMovies=1643, numSuccessful=343, confidenceInterval=0.04, z=15.63}
-[Drama, Adventure]: Stats{numMovies=117, numSuccessful=25, confidenceInterval=0.04, z=17.00}
-[Drama]: Stats{numMovies=4990, numSuccessful=1137, confidenceInterval=0.07, z=25.43}
-[Drama, War]: Stats{numMovies=307, numSuccessful=75, confidenceInterval=0.07, z=29.10}
-[Animation, Comedy]: Stats{numMovies=101, numSuccessful=26, confidenceInterval=0.09, z=34.09}
-[Drama, History]: Stats{numMovies=362, numSuccessful=94, confidenceInterval=0.09, z=35.18}
-[Mystery, Drama, Thriller, Crime]: Stats{numMovies=167, numSuccessful=46, confidenceInterval=0.11, z=41.20}
-[Animation]: Stats{numMovies=240, numSuccessful=68, confidenceInterval=0.11, z=44.36}
-[History, Documentary]: Stats{numMovies=102, numSuccessful=29, confidenceInterval=0.11, z=44.60}
-[Drama, Fantasy]: Stats{numMovies=104, numSuccessful=31, confidenceInterval=0.13, z=49.98}
-[Foreign, Documentary]: Stats{numMovies=125, numSuccessful=39, confidenceInterval=0.14, z=55.45}
-[Documentary]: Stats{numMovies=2716, numSuccessful=914, confidenceInterval=0.18, z=69.23}
-[Drama, Documentary]: Stats{numMovies=116, numSuccessful=41, confidenceInterval=0.18, z=71.65}
-[Music]: Stats{numMovies=107, numSuccessful=38, confidenceInterval=0.19, z=72.29}
-[Drama, History, War]: Stats{numMovies=137, numSuccessful=49, confidenceInterval=0.19, z=73.33}
-[Documentary, Music]: Stats{numMovies=292, numSuccessful=142, confidenceInterval=0.32, z=124.10}
+[Horror, Thriller, Science Fiction]: Stats{numMovies=119, numSuccessful=3, confidenceInterval=-0.15, z=-57.56}
+[Horror, Thriller]: Stats{numMovies=671, numSuccessful=19, confidenceInterval=-0.15, z=-57.18}
+[Horror, Science Fiction]: Stats{numMovies=265, numSuccessful=8, confidenceInterval=-0.15, z=-55.90}
+[Action, Science Fiction]: Stats{numMovies=119, numSuccessful=5, confidenceInterval=-0.14, z=-51.30}
+[Thriller, Action]: Stats{numMovies=332, numSuccessful=15, confidenceInterval=-0.14, z=-50.38}
+[Horror]: Stats{numMovies=950, numSuccessful=45, confidenceInterval=-0.14, z=-50.33}
+[Thriller, Action, Science Fiction]: Stats{numMovies=114, numSuccessful=6, confidenceInterval=-0.13, z=-47.34}
+[Thriller]: Stats{numMovies=445, numSuccessful=24, confidenceInterval=-0.13, z=-47.24}
+[Science Fiction]: Stats{numMovies=188, numSuccessful=10, confidenceInterval=-0.13, z=-47.21}
+[Thriller, Action, Adventure]: Stats{numMovies=112, numSuccessful=6, confidenceInterval=-0.13, z=-46.98}
+[Horror, Thriller, Mystery]: Stats{numMovies=230, numSuccessful=13, confidenceInterval=-0.12, z=-46.02}
+[Western, Action]: Stats{numMovies=121, numSuccessful=7, confidenceInterval=-0.12, z=-45.40}
+[Horror, Comedy]: Stats{numMovies=261, numSuccessful=20, confidenceInterval=-0.10, z=-38.54}
+[Family, Comedy]: Stats{numMovies=224, numSuccessful=18, confidenceInterval=-0.10, z=-37.11}
+[Action, Comedy, Crime]: Stats{numMovies=118, numSuccessful=10, confidenceInterval=-0.10, z=-35.38}
+[Drama, Horror, Thriller]: Stats{numMovies=164, numSuccessful=14, confidenceInterval=-0.09, z=-35.18}
+[Action, Adventure]: Stats{numMovies=114, numSuccessful=10, confidenceInterval=-0.09, z=-34.26}
+[Romance, Comedy]: Stats{numMovies=1086, numSuccessful=107, confidenceInterval=-0.08, z=-30.98}
+[Drama, Thriller, Action]: Stats{numMovies=222, numSuccessful=22, confidenceInterval=-0.08, z=-30.10}
+[Action]: Stats{numMovies=266, numSuccessful=29, confidenceInterval=-0.07, z=-26.43}
+[Drama, Action]: Stats{numMovies=250, numSuccessful=28, confidenceInterval=-0.07, z=-25.30}
+[Crime]: Stats{numMovies=110, numSuccessful=13, confidenceInterval=-0.06, z=-22.91}
+[Western]: Stats{numMovies=265, numSuccessful=32, confidenceInterval=-0.06, z=-22.04}
+[Thriller, Crime]: Stats{numMovies=140, numSuccessful=17, confidenceInterval=-0.06, z=-21.72}
+[Action, Comedy]: Stats{numMovies=271, numSuccessful=33, confidenceInterval=-0.06, z=-21.66}
+[Drama, Horror]: Stats{numMovies=130, numSuccessful=16, confidenceInterval=-0.06, z=-21.10}
+[Thriller, Action, Crime]: Stats{numMovies=240, numSuccessful=30, confidenceInterval=-0.06, z=-20.44}
+[Drama, Thriller]: Stats{numMovies=655, numSuccessful=89, confidenceInterval=-0.04, z=-16.54}
+[Action, Drama, Thriller, Crime]: Stats{numMovies=226, numSuccessful=32, confidenceInterval=-0.04, z=-14.23}
+[Drama, Romance, Comedy]: Stats{numMovies=1000, numSuccessful=145, confidenceInterval=-0.04, z=-13.21}
+[Thriller, Mystery]: Stats{numMovies=163, numSuccessful=25, confidenceInterval=-0.03, z=-9.82}
+[Foreign, Drama, Romance]: Stats{numMovies=142, numSuccessful=22, confidenceInterval=-0.02, z=-9.23}
+[Comedy]: Stats{numMovies=3371, numSuccessful=532, confidenceInterval=-0.02, z=-8.86}
+[Drama, Thriller, Mystery]: Stats{numMovies=203, numSuccessful=32, confidenceInterval=-0.02, z=-8.24}
+[Action, Adventure, Science Fiction]: Stats{numMovies=116, numSuccessful=20, confidenceInterval=-0.01, z=-2.71}
+[Drama, Music]: Stats{numMovies=191, numSuccessful=33, confidenceInterval=-0.01, z=-2.58}
+[Romance, Music, Comedy]: Stats{numMovies=125, numSuccessful=22, confidenceInterval=-0.00, z=-1.38}
+[Drama, Action, Crime]: Stats{numMovies=173, numSuccessful=31, confidenceInterval=-0.00, z=-0.19}
+[Drama, Family, Comedy]: Stats{numMovies=124, numSuccessful=23, confidenceInterval=0.01, z=2.16}
+[Animation, Family, Comedy]: Stats{numMovies=112, numSuccessful=21, confidenceInterval=0.01, z=2.91}
+[Animation, Family]: Stats{numMovies=224, numSuccessful=42, confidenceInterval=0.01, z=2.92}
+[Drama, Family]: Stats{numMovies=228, numSuccessful=43, confidenceInterval=0.01, z=3.33}
+[Drama, Action, Adventure]: Stats{numMovies=120, numSuccessful=23, confidenceInterval=0.01, z=4.46}
+[Drama, Mystery]: Stats{numMovies=104, numSuccessful=20, confidenceInterval=0.01, z=4.70}
+[Drama, Thriller, Crime]: Stats{numMovies=421, numSuccessful=82, confidenceInterval=0.02, z=5.66}
+[Drama, Crime]: Stats{numMovies=563, numSuccessful=112, confidenceInterval=0.02, z=7.25}
+[Drama, Comedy]: Stats{numMovies=1592, numSuccessful=321, confidenceInterval=0.02, z=8.48}
+[Foreign, Drama]: Stats{numMovies=290, numSuccessful=59, confidenceInterval=0.02, z=8.89}
+[Comedy, Crime]: Stats{numMovies=189, numSuccessful=40, confidenceInterval=0.03, z=11.92}
+[Music, Comedy]: Stats{numMovies=126, numSuccessful=27, confidenceInterval=0.03, z=12.89}
+[Drama, Romance, Music]: Stats{numMovies=120, numSuccessful=26, confidenceInterval=0.04, z=13.78}
+[Drama, Romance]: Stats{numMovies=1569, numSuccessful=343, confidenceInterval=0.04, z=15.04}
+[Drama, Adventure]: Stats{numMovies=111, numSuccessful=25, confidenceInterval=0.05, z=16.96}
+[Drama]: Stats{numMovies=4625, numSuccessful=1137, confidenceInterval=0.07, z=27.72}
+[Drama, War]: Stats{numMovies=291, numSuccessful=75, confidenceInterval=0.08, z=29.20}
+[Drama, History]: Stats{numMovies=350, numSuccessful=94, confidenceInterval=0.09, z=33.30}
+[Mystery, Drama, Thriller, Crime]: Stats{numMovies=167, numSuccessful=46, confidenceInterval=0.10, z=35.72}
+[Animation]: Stats{numMovies=226, numSuccessful=68, confidenceInterval=0.12, z=45.27}
+[Foreign, Documentary]: Stats{numMovies=115, numSuccessful=39, confidenceInterval=0.16, z=59.40}
+[Drama, History, War]: Stats{numMovies=135, numSuccessful=49, confidenceInterval=0.18, z=68.31}
+[Drama, Documentary]: Stats{numMovies=109, numSuccessful=41, confidenceInterval=0.20, z=73.18}
+[Documentary]: Stats{numMovies=2327, numSuccessful=914, confidenceInterval=0.23, z=83.96}
+[Documentary, Music]: Stats{numMovies=271, numSuccessful=142, confidenceInterval=0.35, z=128.76}
