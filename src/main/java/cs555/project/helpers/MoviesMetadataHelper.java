@@ -61,7 +61,11 @@ public class MoviesMetadataHelper {
         }
         return null;
     }
-    
+
+    public static String parseWord(String word) {
+        return word.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
+    }
+
     public static String parseOverview(String[] split) {
         String overview = split[OVERVIEW_INDEX];
         return Utils.isStringValid(overview) ? overview : null;

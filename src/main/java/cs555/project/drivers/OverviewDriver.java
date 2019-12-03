@@ -48,7 +48,7 @@ public class OverviewDriver extends Driver {
             .forEach(overviewMetadata -> {
                 String[] words = overviewMetadata.overview.split(" ");
                 for (String word : words) {
-                    Stats stats = wordToStats.computeIfAbsent(word, k -> new Stats());
+                    Stats stats = wordToStats.computeIfAbsent(MoviesMetadataHelper.parseWord(word), k -> new Stats());
                     if (overviewMetadata.successful)
                         stats.numSuccessful++;
                     stats.numMovies++;

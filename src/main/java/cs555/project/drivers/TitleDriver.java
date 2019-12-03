@@ -48,7 +48,7 @@ public class TitleDriver extends Driver {
             .forEach(titleMetadata -> {
                 String[] words = titleMetadata.title.split(" ");
                 for (String word : words) {
-                    Stats stats = wordToStats.computeIfAbsent(word, k -> new Stats());
+                    Stats stats = wordToStats.computeIfAbsent(MoviesMetadataHelper.parseWord(word), k -> new Stats());
                     if (titleMetadata.successful)
                         stats.numSuccessful++;
                     stats.numMovies++;

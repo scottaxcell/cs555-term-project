@@ -48,7 +48,7 @@ public class TaglineDriver extends Driver {
             .forEach(taglineMetadata -> {
                 String[] words = taglineMetadata.tagline.split(" ");
                 for (String word : words) {
-                    Stats stats = wordToStats.computeIfAbsent(word, k -> new Stats());
+                    Stats stats = wordToStats.computeIfAbsent(MoviesMetadataHelper.parseWord(word), k -> new Stats());
                     if (taglineMetadata.successful)
                         stats.numSuccessful++;
                     stats.numMovies++;
