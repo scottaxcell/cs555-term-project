@@ -43,20 +43,20 @@ public class SingleGenreDriver extends Driver {
             .collect();
 
         allMoviesWithAGenre.stream()
-        .filter(movieGenres -> !movieGenres.genre.equals("[]"))
+            .filter(movieGenres -> !movieGenres.genre.equals("[]"))
             .forEach(genreMetadata -> {
 
-               String genresString = genreMetadata.genre;
-               String[] genres = genresString.split("},");
-               for (String genre : genres) {
-                  String[] tokens = genre.split("\'");
-                  if (tokens.length >= 5) {
-                     Stats stats = genreToStats.computeIfAbsent(tokens[5], k -> new Stats());
-                     if (genreMetadata.successful)
-                        stats.numSuccessful++;
-                     stats.numMovies++;
-                  }
-               }
+                String genresString = genreMetadata.genre;
+                String[] genres = genresString.split("},");
+                for (String genre : genres) {
+                    String[] tokens = genre.split("\'");
+                    if (tokens.length >= 5) {
+                        Stats stats = genreToStats.computeIfAbsent(tokens[5], k -> new Stats());
+                        if (genreMetadata.successful)
+                            stats.numSuccessful++;
+                        stats.numMovies++;
+                    }
+                }
             });
 
         calculatePopulationMeanAndStdDev(allMoviesWithAGenre);
@@ -103,7 +103,12 @@ public class SingleGenreDriver extends Driver {
                 writeMe.add(String.format("%s: %s", e.getKey(), stats));
             });
 
-            sc.parallelize(writeMe, 1).saveAsTextFile("hdfs://pierre:42500/SingleGenreAnalysis");
+        writeMe.add("Number of movies = " + numMovies);
+        writeMe.add("Number of successes = " + numSuccessful);
+        writeMe.add("Population mean = " + populationMean);
+        writeMe.add("Std. dev. = " + stdDev);
+
+        sc.parallelize(writeMe, 1).saveAsTextFile("hdfs://pierre:42500/SingleGenreAnalysis");
     }
 
     /**

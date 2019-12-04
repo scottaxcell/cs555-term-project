@@ -2,16 +2,15 @@ package cs555.project.drivers;
 
 import cs555.project.helpers.MoviesMetadataHelper;
 import cs555.project.utils.Utils;
+import org.apache.spark.SparkConf;
+import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.api.java.JavaSparkContext;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.spark.SparkConf;
-import org.apache.spark.api.java.JavaRDD;
-import org.apache.spark.api.java.JavaSparkContext;
 
 public class ReleaseMonthDriver extends Driver {
     public static void main(String[] args) {
@@ -97,6 +96,11 @@ public class ReleaseMonthDriver extends Driver {
                 writeMe.add(String.format("%s: %s", e.getKey(), stats));
             });
 
+        writeMe.add("Number of movies = " + numMovies);
+        writeMe.add("Number of successes = " + numSuccessful);
+        writeMe.add("Population mean = " + populationMean);
+        writeMe.add("Std. dev. = " + stdDev);
+
         sc.parallelize(writeMe, 1).saveAsTextFile("ReleaseMonthAnalysis");
     }
 
@@ -106,7 +110,7 @@ public class ReleaseMonthDriver extends Driver {
      * @param overviewMetadatas
      */
     private void calculatePopulationMeanAndStdDev(List<ReleaseMonthMetadata> releaseMonthMetadatas) {
-    	releaseMonthMetadatas.stream()
+        releaseMonthMetadatas.stream()
             .forEach(releaseMonthMetadata -> {
                 if (releaseMonthMetadata.successful)
                     numSuccessful++;

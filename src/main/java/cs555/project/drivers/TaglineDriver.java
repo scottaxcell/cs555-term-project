@@ -99,6 +99,11 @@ public class TaglineDriver extends Driver {
                 writeMe.add(String.format("%s: %s", e.getKey(), stats));
             });
 
+        writeMe.add("Number of movies = " + numMovies);
+        writeMe.add("Number of successes = " + numSuccessful);
+        writeMe.add("Population mean = " + populationMean);
+        writeMe.add("Std. dev. = " + stdDev);
+
         sc.parallelize(writeMe, 1).saveAsTextFile("TaglineAnalysis");
     }
 

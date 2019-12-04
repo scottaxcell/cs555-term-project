@@ -2,16 +2,15 @@ package cs555.project.drivers;
 
 import cs555.project.helpers.MoviesMetadataHelper;
 import cs555.project.utils.Utils;
+import org.apache.spark.SparkConf;
+import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.api.java.JavaSparkContext;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.spark.SparkConf;
-import org.apache.spark.api.java.JavaRDD;
-import org.apache.spark.api.java.JavaSparkContext;
 
 public class ReleaseWeekDriver extends Driver {
     public static void main(String[] args) {
@@ -97,6 +96,11 @@ public class ReleaseWeekDriver extends Driver {
                 writeMe.add(String.format("Week %s (%s - %s): %s", e.getKey(), Utils.getDateFromWeekNumber(e.getKey(), "start"), Utils.getDateFromWeekNumber(e.getKey(), "end"), stats));
             });
 
+        writeMe.add("Number of movies = " + numMovies);
+        writeMe.add("Number of successes = " + numSuccessful);
+        writeMe.add("Population mean = " + populationMean);
+        writeMe.add("Std. dev. = " + stdDev);
+
         sc.parallelize(writeMe, 1).saveAsTextFile("ReleaseWeekAnalysis");
     }
 
@@ -106,7 +110,7 @@ public class ReleaseWeekDriver extends Driver {
      * @param overviewMetadatas
      */
     private void calculatePopulationMeanAndStdDev(List<ReleaseWeekMetadata> releaseWeekMetadatas) {
-    	releaseWeekMetadatas.stream()
+        releaseWeekMetadatas.stream()
             .forEach(releaseWeekMetadata -> {
                 if (releaseWeekMetadata.successful)
                     numSuccessful++;

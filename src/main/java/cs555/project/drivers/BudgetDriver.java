@@ -96,6 +96,11 @@ public class BudgetDriver extends Driver {
                 writeMe.add(String.format("%d: %s", e.getKey(), stats));
             });
 
+        writeMe.add("Number of movies = " + numMovies);
+        writeMe.add("Number of successes = " + numSuccessful);
+        writeMe.add("Population mean = " + populationMean);
+        writeMe.add("Std. dev. = " + stdDev);
+
         sc.parallelize(writeMe, 1).saveAsTextFile("BudgetAnalysis");
     }
 

@@ -7,12 +7,7 @@ import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.HashSet;
+import java.util.*;
 
 public class MultipleGenreDriver extends Driver {
     public static void main(String[] args) {
@@ -44,13 +39,13 @@ public class MultipleGenreDriver extends Driver {
             .map(split -> new GenreMetadata(MoviesMetadataHelper.parseGenres(split), MoviesMetadataHelper.isMovieSuccessfulByVoteAverage(split)))
             .collect();
 
-         allMoviesWithAGenre.stream()
-         .forEach(genreReleaseMetadata -> {
-               Stats stats = genreToStats.computeIfAbsent(genreReleaseMetadata.genres, k -> new Stats());
-               if (genreReleaseMetadata.successful)
-                  stats.numSuccessful++;
-               stats.numMovies++;    
-         });     
+        allMoviesWithAGenre.stream()
+            .forEach(genreReleaseMetadata -> {
+                Stats stats = genreToStats.computeIfAbsent(genreReleaseMetadata.genres, k -> new Stats());
+                if (genreReleaseMetadata.successful)
+                    stats.numSuccessful++;
+                stats.numMovies++;
+            });
 
         calculatePopulationMeanAndStdDev(allMoviesWithAGenre);
 
@@ -96,7 +91,12 @@ public class MultipleGenreDriver extends Driver {
                 writeMe.add(String.format("%s: %s", e.getKey(), stats));
             });
 
-            sc.parallelize(writeMe, 1).saveAsTextFile("hdfs://pierre:42500/MultipleGenreAnalysis");
+        writeMe.add("Number of movies = " + numMovies);
+        writeMe.add("Number of successes = " + numSuccessful);
+        writeMe.add("Population mean = " + populationMean);
+        writeMe.add("Std. dev. = " + stdDev);
+
+        sc.parallelize(writeMe, 1).saveAsTextFile("hdfs://pierre:42500/MultipleGenreAnalysis");
     }
 
     /**
